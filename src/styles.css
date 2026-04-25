@@ -100,6 +100,23 @@ button {
   color: rgba(235, 245, 255, 0.78);
 }
 
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.project-meta span {
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(159, 188, 230, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(235, 245, 255, 0.82);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.74rem;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -285,6 +302,10 @@ button {
   color: #ffd58d;
 }
 
+.signal.neutral {
+  color: #8ebeff;
+}
+
 .content-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
@@ -350,10 +371,108 @@ button {
   line-height: 1.65;
 }
 
+.mock-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.mock-card h2 {
+  margin: 0 0 18px;
+  font-size: clamp(1.45rem, 2.4vw, 2.1rem);
+  line-height: 1.05;
+}
+
+.mock-card-wide {
+  grid-column: 1 / -1;
+}
+
+.mock-list {
+  display: grid;
+  gap: 12px;
+}
+
+.mock-row {
+  display: grid;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(159, 188, 230, 0.12);
+}
+
+.mock-row:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.mock-row strong,
+.mock-row p,
+.export-item strong,
+.export-item p {
+  margin: 0;
+}
+
+.mock-row p,
+.export-item p {
+  color: rgba(235, 245, 255, 0.72);
+  line-height: 1.55;
+  margin-top: 4px;
+}
+
+.mock-row-meta,
+.mock-tags,
+.export-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mock-row-meta span,
+.tag-pill,
+.status-pill {
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(159, 188, 230, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  color: rgba(235, 245, 255, 0.82);
+}
+
+.status-pill.queued {
+  color: #8ebeff;
+}
+
+.status-pill.running {
+  color: #98ffd8;
+}
+
+.status-pill.review {
+  color: #ffd58d;
+}
+
+.export-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.export-item {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(159, 188, 230, 0.12);
+}
+
 @media (max-width: 960px) {
   .hero,
-  .content-grid {
+  .content-grid,
+  .mock-grid,
+  .export-grid {
     grid-template-columns: 1fr;
+  }
+
+  .mock-card-wide {
+    grid-column: auto;
   }
 
   .metrics-grid {

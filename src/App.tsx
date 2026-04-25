@@ -1,33 +1,4 @@
-const pipelineSteps = [
-  {
-    title: "Ingest imagery",
-    description:
-      "Drop Sentinel and drone imagery into one queue and normalize it for analysis.",
-  },
-  {
-    title: "Run segmentation",
-    description:
-      "Use a model-backed inference pass to isolate surfaces, water, vegetation, and anomalies.",
-  },
-  {
-    title: "Review insights",
-    description:
-      "Inspect metrics, confidence, and exportable overlays before handing results off.",
-  },
-];
-
-const metrics = [
-  { label: "Scenes processed", value: "128" },
-  { label: "Mean confidence", value: "94.2%" },
-  { label: "Active regions", value: "12" },
-  { label: "Time saved", value: "18h" },
-];
-
-const signals = [
-  { label: "Vegetation health", value: "Stable", tone: "good" },
-  { label: "Water index", value: "Elevated", tone: "warn" },
-  { label: "Change detection", value: "Low drift", tone: "good" },
-];
+import { mockDashboard } from "./mockData";
 
 function App() {
   return (
@@ -41,6 +12,12 @@ function App() {
             output, and surfacing the signals that matter.
           </p>
 
+          <div className="project-meta">
+            <span>{mockDashboard.project.name}</span>
+            <span>{mockDashboard.project.mode}</span>
+            <span>{mockDashboard.project.updatedAt}</span>
+          </div>
+
           <div className="hero-actions">
             <button type="button" className="primary-button">
               Launch analysis
@@ -51,7 +28,7 @@ function App() {
           </div>
 
           <dl className="metrics-grid">
-            {metrics.map((metric) => (
+            {mockDashboard.metrics.map((metric) => (
               <div key={metric.label} className="metric-card">
                 <dt>{metric.label}</dt>
                 <dd>{metric.value}</dd>
@@ -62,7 +39,7 @@ function App() {
 
         <div className="hero-panel">
           <div className="panel-header">
-            <span>Live overview</span>
+            <span>{mockDashboard.project.region}</span>
             <span className="panel-badge">Model ready</span>
           </div>
 
@@ -70,13 +47,13 @@ function App() {
             <div className="map-orbit map-orbit-one" />
             <div className="map-orbit map-orbit-two" />
             <div className="map-core">
-              <span>Region 07</span>
+              <span>{mockDashboard.project.region}</span>
               <strong>Coastal update</strong>
             </div>
           </div>
 
           <div className="signal-list">
-            {signals.map((signal) => (
+            {mockDashboard.signals.map((signal) => (
               <div key={signal.label} className="signal-row">
                 <span>{signal.label}</span>
                 <strong className={`signal ${signal.tone}`}>
@@ -101,13 +78,75 @@ function App() {
         <article className="card steps-card">
           <p className="card-kicker">Pipeline</p>
           <div className="steps">
-            {pipelineSteps.map((step, index) => (
+            {mockDashboard.pipelineSteps.map((step, index) => (
               <div key={step.title} className="step-row">
                 <span className="step-index">0{index + 1}</span>
                 <div>
                   <h3>{step.title}</h3>
                   <p>{step.description}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </article>
+      </section>
+
+      <section className="mock-grid">
+        <article className="card mock-card">
+          <p className="card-kicker">Mock structures</p>
+          <h2>Reusable dataset shapes for testing the UI.</h2>
+          <div className="mock-list">
+            {mockDashboard.datasets.map((dataset) => (
+              <div key={dataset.name} className="mock-row">
+                <div>
+                  <strong>{dataset.name}</strong>
+                  <p>{dataset.source}</p>
+                </div>
+                <div className="mock-row-meta">
+                  <span>{dataset.resolution}</span>
+                  <span>{dataset.coverage}</span>
+                  <span>{dataset.freshness}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="card mock-card">
+          <p className="card-kicker">Mock jobs</p>
+          <h2>Pipeline states that are easy to swap out later.</h2>
+          <div className="mock-list">
+            {mockDashboard.jobs.map((job) => (
+              <div key={job.id} className="mock-row">
+                <div>
+                  <strong>
+                    {job.id} · {job.name}
+                  </strong>
+                  <p>{job.eta}</p>
+                </div>
+                <div className="mock-tags">
+                  <span className={`status-pill ${job.status}`}>
+                    {job.status}
+                  </span>
+                  {job.tags.map((tag) => (
+                    <span key={tag} className="tag-pill">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="card mock-card mock-card-wide">
+          <p className="card-kicker">Mock exports</p>
+          <h2>Output formats for downstream review and handoff.</h2>
+          <div className="export-grid">
+            {mockDashboard.exports.map((item) => (
+              <div key={item.format} className="export-item">
+                <strong>{item.format}</strong>
+                <p>{item.description}</p>
               </div>
             ))}
           </div>
