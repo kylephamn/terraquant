@@ -5,10 +5,11 @@ export function PipelineSection() {
     <section className="content-grid">
       <article className="card accent-card">
         <p className="card-kicker">Workflow</p>
-        <h2>Designed for a clean path from upload to insight.</h2>
+        <h2>From satellite pixels to yield forecasts.</h2>
         <p>
-          This starter gives you a strong visual shell for future API
-          integration, model status, and result review tools.
+          We fuse NASA HLS imagery with historical NASS survey data to generate
+          county-level corn yield estimates with uncertainty bands at four key
+          season checkpoints.
         </p>
       </article>
 

@@ -4,8 +4,8 @@ export function MockDataSection() {
   return (
     <>
       <article className="card mock-card">
-        <p className="card-kicker">Mock structures</p>
-        <h2>Reusable dataset shapes for testing the UI.</h2>
+        <p className="card-kicker">Input datasets</p>
+        <h2>Satellite and survey data driving the forecast.</h2>
         <div className="mock-list">
           {mockDashboard.datasets.map((dataset) => (
             <div key={dataset.name} className="mock-row">
@@ -24,8 +24,8 @@ export function MockDataSection() {
       </article>
 
       <article className="card mock-card">
-        <p className="card-kicker">Mock jobs</p>
-        <h2>Pipeline states that are easy to swap out later.</h2>
+        <p className="card-kicker">Analysis pipeline</p>
+        <h2>Active inference jobs across the Corn Belt.</h2>
         <div className="mock-list">
           {mockDashboard.jobs.map((job) => (
             <div key={job.id} className="mock-row">
@@ -51,8 +51,8 @@ export function MockDataSection() {
       </article>
 
       <article className="card mock-card mock-card-wide">
-        <p className="card-kicker">Mock exports</p>
-        <h2>Output formats for downstream review and handoff.</h2>
+        <p className="card-kicker">Output formats</p>
+        <h2>Forecast outputs ready for review and handoff.</h2>
         <div className="export-grid">
           {mockDashboard.exports.map((item) => (
             <div key={item.format} className="export-item">

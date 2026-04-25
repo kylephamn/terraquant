@@ -11,11 +11,12 @@ export function Hero({ theme, nextTheme, onToggleTheme }: HeroProps) {
   return (
     <section className="hero">
       <div className="hero-copy">
-        <p className="eyebrow">TerraQuant control room</p>
-        <h1>Turn geospatial data into decisions fast.</h1>
+        <p className="eyebrow">USDA × NASA · 2026 Hackathon</p>
+        <h1>Corn yield forecasting from space.</h1>
         <p className="lede">
-          A focused React dashboard for reviewing imagery, monitoring model
-          output, and surfacing the signals that matter.
+          A geospatial ML pipeline fusing NASA Harmonized Landsat/Sentinel-2
+          imagery with USDA NASS survey data to forecast corn-for-grain yields
+          across the Corn Belt with a cone of uncertainty.
         </p>
 
         <div className="project-meta">
@@ -26,10 +27,10 @@ export function Hero({ theme, nextTheme, onToggleTheme }: HeroProps) {
 
         <div className="hero-actions">
           <button type="button" className="primary-button">
-            Launch analysis
+            Run forecast
           </button>
           <button type="button" className="secondary-button">
-            View sample project
+            View methodology
           </button>
           <button
             type="button"
@@ -54,16 +55,16 @@ export function Hero({ theme, nextTheme, onToggleTheme }: HeroProps) {
       <div className="hero-panel">
         <div className="panel-header">
           <span>{mockDashboard.project.region}</span>
-          <span className="panel-badge">Model ready</span>
+          <span className="panel-badge">Forecast ready</span>
         </div>
 
-        <div className="map-card" aria-label="Region preview placeholder">
+        <div className="map-card" aria-label="Corn Belt region preview">
           <div className="map-orbit map-orbit-one" />
           <div className="map-orbit map-orbit-two" />
           <div className="map-core">
             <span>{mockDashboard.project.region}</span>
-            <strong>Coastal update</strong>
-            <span className="map-placeholder-label">Preview</span>
+            <strong>5 States</strong>
+            <span className="map-placeholder-label">IA · CO · WI · MO · NE</span>
           </div>
         </div>
 
