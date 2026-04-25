@@ -48,9 +48,9 @@ export interface ExternalDatasetSource {
 
 export const mockDashboard = {
   project: {
-    name: "TerraQuant / Coastal Watch",
-    region: "Region 07",
-    mode: "Sentinel + drone fusion",
+    name: "TerraQuant / Corn Yield Forecast",
+    region: "Corn Belt",
+    mode: "HLS + NASS fusion",
     updatedAt: "Apr 24, 2026 14:20 UTC",
   },
   dataSource: {
