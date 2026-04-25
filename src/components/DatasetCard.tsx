@@ -47,8 +47,9 @@ export function DatasetCard({
         href={mockDashboard.dataSource.url}
         target="_blank"
         rel="noreferrer"
+        aria-label="Open USDA Quick Stats result (opens in new tab)"
       >
-        Open USDA Quick Stats result
+        Open USDA Quick Stats result ↗
       </a>
 
       <div className="source-columns">
@@ -72,7 +73,8 @@ export function DatasetCard({
           />
 
           <div className="table-wrap">
-            <table className="preview-table">
+            <table className="preview-table" aria-label="Preview of imported dataset">
+              <caption className="sr-only">First {importedDataset.sampleRows.length} rows of uploaded CSV, showing {importedDataset.headers.slice(0, 6).length} columns</caption>
               <thead>
                 <tr>
                   {importedDataset.headers.slice(0, 6).map((header) => (

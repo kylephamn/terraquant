@@ -1,54 +1,24 @@
 import { useTheme } from "./hooks/useTheme";
-import { useDatasetImport } from "./hooks/useDatasetImport";
-import { useColumnMapping } from "./hooks/useColumnMapping";
-import { mockDashboard } from "./mockData";
 import { Hero } from "./components/Hero";
+import { ProblemSection } from "./components/ProblemSection";
 import { PipelineSection } from "./components/PipelineSection";
-import { DatasetCard } from "./components/DatasetCard";
-import { MockDataSection } from "./components/MockDataSection";
 import { VisualizationsSection } from "./components/VisualizationsSection";
+import { MaskSection } from "./components/MaskSection";
 
 function App() {
   const { theme, nextTheme, toggleTheme } = useTheme();
-  const { importedDataset, importError, isImporting, inputKey, handleImport } =
-    useDatasetImport();
-  const {
-    columnMapping,
-    updateMapping,
-    mappedCount,
-    missingRequiredColumns,
-    isMappingReady,
-  } = useColumnMapping(importedDataset, mockDashboard.dataSource.keyColumns);
 
   return (
-    <main className="app-shell">
-      <Hero
-        theme={theme}
-        nextTheme={nextTheme}
-        onToggleTheme={toggleTheme}
-      />
-
-      <PipelineSection />
-
-      <VisualizationsSection />
-
-      <section className="mock-grid">
-        <DatasetCard
-          importedDataset={importedDataset}
-          importError={importError}
-          isImporting={isImporting}
-          inputKey={inputKey}
-          columnMapping={columnMapping}
-          mappedCount={mappedCount}
-          missingRequiredColumns={missingRequiredColumns}
-          isMappingReady={isMappingReady}
-          onImport={handleImport}
-          onUpdateMapping={updateMapping}
-        />
-
-        <MockDataSection />
-      </section>
-    </main>
+    <>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
+      <main id="main-content" className="app-shell">
+        <Hero theme={theme} nextTheme={nextTheme} onToggleTheme={toggleTheme} />
+        <ProblemSection />
+        <PipelineSection />
+        <MaskSection />
+        <VisualizationsSection />
+      </main>
+    </>
   );
 }
 
