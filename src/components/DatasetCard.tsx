@@ -59,36 +59,6 @@ export function DatasetCard({
         ))}
       </div>
 
-      <div className="import-panel">
-        <label className="upload-label" htmlFor="usda-upload">
-          Import USDA Spreadsheet Export (CSV/TSV)
-        </label>
-        <input
-          key={inputKey}
-          id="usda-upload"
-          className="upload-input"
-          type="file"
-          accept=".csv,.tsv,.txt"
-          onChange={onImport}
-        />
-
-        {importError ? (
-          <p className="import-error">{importError}</p>
-        ) : isImporting ? (
-          <p className="import-note import-note--loading">Parsing file…</p>
-        ) : importedDataset ? (
-          <p className="import-note">
-            Loaded {importedDataset.fileName} with{" "}
-            {importedDataset.rowCount.toLocaleString()} rows.
-          </p>
-        ) : (
-          <p className="import-note">
-            No local file loaded yet. Upload an exported Quick Stats file to
-            preview columns.
-          </p>
-        )}
-      </div>
-
       {importedDataset && (
         <div className="import-results">
           <MappingPanel

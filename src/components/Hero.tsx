@@ -1,5 +1,6 @@
 import type { ThemeMode } from "../hooks/useTheme";
 import { mockDashboard } from "../mockData";
+import choropleth from "../assets/choropleth.png";
 
 interface HeroProps {
   theme: ThemeMode;
@@ -58,14 +59,9 @@ export function Hero({ theme, nextTheme, onToggleTheme }: HeroProps) {
           <span className="panel-badge">Forecast ready</span>
         </div>
 
-        <div className="map-card" aria-label="Corn Belt region preview">
-          <div className="map-orbit map-orbit-one" />
-          <div className="map-orbit map-orbit-two" />
-          <div className="map-core">
-            <span>{mockDashboard.project.region}</span>
-            <strong>5 States</strong>
-            <span className="map-placeholder-label">IA · CO · WI · MO · NE</span>
-          </div>
+        <div className="map-card" aria-label="Corn Belt yield forecast choropleth">
+          <img src={choropleth} alt="Predicted 2025 EOS corn yield by state, bu/acre" className="hero-choropleth" />
+          <span className="map-img-label">2025 EOS Yield Forecast · bu/acre</span>
         </div>
 
         <div className="signal-list">

@@ -6,6 +6,7 @@ import { Hero } from "./components/Hero";
 import { PipelineSection } from "./components/PipelineSection";
 import { DatasetCard } from "./components/DatasetCard";
 import { MockDataSection } from "./components/MockDataSection";
+import { VisualizationsSection } from "./components/VisualizationsSection";
 
 function App() {
   const { theme, nextTheme, toggleTheme } = useTheme();
@@ -28,6 +29,8 @@ function App() {
       />
 
       <PipelineSection />
+
+      <VisualizationsSection />
 
       <section className="mock-grid">
         <DatasetCard

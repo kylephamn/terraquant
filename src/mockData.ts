@@ -81,6 +81,7 @@ export const mockDashboard = {
     { label: "NDVI trend (Aug 1)", value: "Above avg", tone: "good" },
     { label: "Precip. deviation", value: "−12%", tone: "warn" },
     { label: "Crop stress index", value: "Low", tone: "good" },
+    { label: "Corn sweat (VPD)", value: "1.8 kPa", tone: "warn" },
   ] satisfies Signal[],
   pipelineSteps: [
     {
