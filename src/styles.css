@@ -116,7 +116,11 @@
   color-scheme: light;
 }
 
-* {
+/* ─── Reset ──────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -132,20 +136,14 @@ body {
   background: var(--page-bg);
 }
 
-body,
-.hero-copy,
-.hero-panel,
-.card,
-.metric-card,
-.signal-row,
-.mock-row-meta span,
-.tag-pill,
-.status-pill,
-.project-meta span,
-.secondary-button,
-.export-item,
-.map-card,
-.map-core {
+/* Replace the long explicit selector list with a single blanket rule.
+   All themed elements use CSS custom properties, so transitioning these
+   four properties on everything is equivalent — and any new component
+   automatically gets smooth theme transitions without needing to be
+   added to a list. */
+*,
+*::before,
+*::after {
   transition:
     background-color var(--theme-duration) var(--theme-ease),
     border-color var(--theme-duration) var(--theme-ease),
@@ -155,33 +153,45 @@ body,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body,
-  .hero-copy,
-  .hero-panel,
-  .card,
-  .metric-card,
-  .signal-row,
-  .mock-row-meta span,
-  .tag-pill,
-  .status-pill,
-  .project-meta span,
-  .secondary-button,
-  .export-item,
-  .map-card,
-  .map-core {
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
   }
 }
 
-button {
+/* Opt specific elements back out of theme transitions so their own
+   interaction transitions (transform, opacity) still fire. */
+.primary-button,
+.secondary-button {
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    background-color var(--theme-duration) var(--theme-ease),
+    color var(--theme-duration) var(--theme-ease) !important;
+}
+
+/* ─── Base elements ──────────────────────────────────────────────── */
+
+/* Inherit font on all interactive elements so OS defaults don't leak in. */
+button,
+input,
+select,
+textarea {
   font: inherit;
 }
+
+/* ─── Layout shell ───────────────────────────────────────────────── */
 
 .app-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
   padding: 32px 0 48px;
 }
+
+/* ─── Hero ───────────────────────────────────────────────────────── */
 
 .hero {
   display: grid;
@@ -260,10 +270,6 @@ button {
   padding: 14px 22px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background 160ms ease;
 }
 
 .primary-button {
@@ -286,6 +292,8 @@ button {
 .secondary-button:hover {
   transform: translateY(-1px);
 }
+
+/* ─── Metrics ────────────────────────────────────────────────────── */
 
 .metrics-grid {
   display: grid;
@@ -311,6 +319,8 @@ button {
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+/* ─── Hero panel / map ───────────────────────────────────────────── */
 
 .hero-panel {
   border-radius: 28px;
@@ -348,7 +358,8 @@ button {
   min-height: 320px;
   border-radius: 24px;
   background: var(--map-bg);
-  border: 1px solid var(--surface-border);
+  /* Dashed border signals "placeholder" without needing extra text. */
+  border: 1px dashed var(--surface-border);
 }
 
 .map-orbit {
@@ -400,6 +411,17 @@ button {
   font-size: 1.25rem;
 }
 
+/* Small label that makes clear this is a placeholder, not a broken map. */
+.map-placeholder-label {
+  margin-top: 6px !important;
+  font-size: 0.62rem !important;
+  opacity: 0.5;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ─── Signals ────────────────────────────────────────────────────── */
+
 .signal-list {
   display: grid;
   gap: 10px;
@@ -417,17 +439,11 @@ button {
   font-size: 0.78rem;
 }
 
-.signal.good {
-  color: #98ffd8;
-}
+.signal.good  { color: #98ffd8; }
+.signal.warn  { color: #ffd58d; }
+.signal.neutral { color: #8ebeff; }
 
-.signal.warn {
-  color: #ffd58d;
-}
-
-.signal.neutral {
-  color: #8ebeff;
-}
+/* ─── Content / pipeline ─────────────────────────────────────────── */
 
 .content-grid {
   display: grid;
@@ -494,6 +510,8 @@ button {
   line-height: 1.65;
 }
 
+/* ─── Mock grid ──────────────────────────────────────────────────── */
+
 .mock-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -510,6 +528,8 @@ button {
 .mock-card-wide {
   grid-column: 1 / -1;
 }
+
+/* ─── Dataset card ───────────────────────────────────────────────── */
 
 .source-meta,
 .source-columns {
@@ -546,6 +566,8 @@ button {
   color: var(--accent-strong);
 }
 
+/* ─── Import panel ───────────────────────────────────────────────── */
+
 .import-panel {
   margin-top: 14px;
 }
@@ -577,21 +599,32 @@ button {
   color: var(--text-muted);
 }
 
+/* Subtle pulse to indicate async work without a spinner. */
+.import-note--loading {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .import-note--loading {
+    animation: none;
+  }
+}
+
 .import-error {
   color: #f08989;
 }
 
-.table-wrap {
-  margin-top: 14px;
-  overflow: auto;
-  border: 1px solid var(--surface-border);
-  border-radius: 14px;
-  background: var(--surface-bg);
-}
+/* ─── Import results / mapping ───────────────────────────────────── */
 
 .import-results {
   display: grid;
   gap: 14px;
+  margin-top: 14px;
 }
 
 .mapping-panel {
@@ -670,6 +703,15 @@ button {
   color: var(--text-primary);
 }
 
+/* ─── Preview table ──────────────────────────────────────────────── */
+
+.table-wrap {
+  overflow: auto;
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  background: var(--surface-bg);
+}
+
 .preview-table {
   width: 100%;
   border-collapse: collapse;
@@ -704,6 +746,8 @@ button {
 .preview-table tbody tr:last-child td {
   border-bottom: none;
 }
+
+/* ─── Mock lists ─────────────────────────────────────────────────── */
 
 .mock-list {
   display: grid;
@@ -756,21 +800,16 @@ button {
   color: var(--text-chip);
 }
 
-.status-pill.queued {
-  color: #8ebeff;
-}
+.status-pill.queued  { color: #8ebeff; }
+.status-pill.running { color: #98ffd8; }
+.status-pill.review  { color: #ffd58d; }
 
-.status-pill.running {
-  color: #98ffd8;
-}
-
-.status-pill.review {
-  color: #ffd58d;
-}
+/* ─── Exports ────────────────────────────────────────────────────── */
 
 .export-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .export-item {
@@ -779,6 +818,8 @@ button {
   background: var(--surface-bg);
   border: 1px solid var(--surface-border);
 }
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
 
 @media (max-width: 960px) {
   .hero,
