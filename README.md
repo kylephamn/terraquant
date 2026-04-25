@@ -1,7 +1,7 @@
 ```markdown
 # TerraQuant: Geospatial AI for Corn Yield Forecasting
 
-**TerraQuant** bridges the gap between satellite imagery, climate data, and agricultural ground truth to deliver real-time, multi-stage yield predictions. Built for the USDA and NASA Innovation Challenge, this project forecasts corn yields across Iowa, Colorado, Wisconsin, Missouri, and Nebraska, while mathematically modeling the "Cone of Uncertainty" to account for shifting weather patterns as the growing season progresses.
+** TerraQuant ** bridges the gap between satellite imagery, climate data, and agricultural ground truth to deliver real-time, multi-stage yield predictions. Built for the USDA and NASA Innovation Challenge, this project forecasts corn yields across Iowa, Colorado, Wisconsin, Missouri, and Nebraska, while mathematically modeling the "Cone of Uncertainty" to account for shifting weather patterns as the growing season progresses.
 
 ## 🌾 The Problem
 Accurate crop yield forecasting is critical for global food security and supply chains. As traditional farmer survey response rates decline, there is a critical need to supplement surveys with automated, satellite-driven AI models. Our solution isolates pure crop pixels, tracks growth through time-series imagery, and quantifies the uncertainty of mid-season predictions.
