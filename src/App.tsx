@@ -1,6 +1,36 @@
+import { useEffect, useState } from "react";
 import { mockDashboard } from "./mockData";
 
+type ThemeMode = "dark" | "light";
+
+const THEME_STORAGE_KEY = "terraquant-theme";
+
+function getInitialTheme(): ThemeMode {
+  if (typeof window === "undefined") {
+    return "dark";
+  }
+
+  const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+  if (savedTheme === "dark" || savedTheme === "light") {
+    return savedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: light)").matches
+    ? "light"
+    : "dark";
+}
+
 function App() {
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme]);
+
+  const nextTheme = theme === "dark" ? "light" : "dark";
+
   return (
     <main className="app-shell">
       <section className="hero">
@@ -24,6 +54,14 @@ function App() {
             </button>
             <button type="button" className="secondary-button">
               View sample project
+            </button>
+            <button
+              type="button"
+              className="secondary-button theme-toggle"
+              onClick={() => setTheme(nextTheme)}
+              aria-label={`Switch to ${nextTheme} mode`}
+            >
+              {theme === "dark" ? "Light mode" : "Dark mode"}
             </button>
           </div>
 
@@ -92,6 +130,31 @@ function App() {
       </section>
 
       <section className="mock-grid">
+        <article className="card mock-card mock-card-wide">
+          <p className="card-kicker">Dataset source</p>
+          <h2>{mockDashboard.dataSource.label}</h2>
+          <div className="source-meta">
+            <span>{mockDashboard.dataSource.provider}</span>
+            <span>{mockDashboard.dataSource.rows.toLocaleString()} rows</span>
+            <span>Query ID {mockDashboard.dataSource.queryId}</span>
+          </div>
+          <a
+            className="dataset-link"
+            href={mockDashboard.dataSource.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open USDA Quick Stats result
+          </a>
+          <div className="source-columns">
+            {mockDashboard.dataSource.keyColumns.map((column) => (
+              <span key={column} className="tag-pill">
+                {column}
+              </span>
+            ))}
+          </div>
+        </article>
+
         <article className="card mock-card">
           <p className="card-kicker">Mock structures</p>
           <h2>Reusable dataset shapes for testing the UI.</h2>

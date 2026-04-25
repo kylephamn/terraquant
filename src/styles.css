@@ -1,7 +1,20 @@
 :root {
-  font-family: "Space Grotesk", system-ui, sans-serif;
-  color: #f4f7fb;
-  background:
+  --theme-duration: 260ms;
+  --theme-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --text-primary: #f4f7fb;
+  --text-soft: rgba(235, 245, 255, 0.78);
+  --text-muted: rgba(235, 245, 255, 0.72);
+  --text-chip: rgba(235, 245, 255, 0.82);
+  --page-bg:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(89, 179, 255, 0.12),
+      transparent 28%
+    ),
+    radial-gradient(circle at 80% 0%, rgba(64, 224, 178, 0.1), transparent 24%),
+    linear-gradient(180deg, #08111f 0%, #06101c 100%);
+  --root-bg:
     radial-gradient(
       circle at top left,
       rgba(84, 167, 255, 0.28),
@@ -13,11 +26,94 @@
       transparent 26%
     ),
     linear-gradient(180deg, #07111f 0%, #0b1728 48%, #050b14 100%);
+  --card-bg: rgba(7, 16, 29, 0.72);
+  --card-border: rgba(159, 188, 230, 0.16);
+  --surface-bg: rgba(255, 255, 255, 0.03);
+  --surface-border: rgba(159, 188, 230, 0.14);
+  --accent: #86c8ff;
+  --accent-strong: #8ebeff;
+  --panel-badge-bg: rgba(111, 255, 213, 0.12);
+  --panel-badge-text: #aafbe3;
+  --shadow: 0 24px 80px rgba(1, 6, 14, 0.35);
+  --primary-button-text: #02111f;
+  --map-bg:
+    radial-gradient(
+      circle at 35% 35%,
+      rgba(116, 183, 255, 0.28),
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at 60% 60%,
+      rgba(111, 255, 213, 0.18),
+      transparent 20%
+    ),
+    linear-gradient(160deg, #13263d 0%, #0d1724 100%);
+  --map-core-bg: rgba(3, 11, 20, 0.56);
+
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  color: var(--text-primary);
+  background: var(--root-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --text-primary: #13243a;
+  --text-soft: rgba(19, 36, 58, 0.78);
+  --text-muted: rgba(19, 36, 58, 0.72);
+  --text-chip: rgba(19, 36, 58, 0.86);
+  --root-bg:
+    radial-gradient(
+      circle at top left,
+      rgba(125, 206, 255, 0.32),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(115, 240, 194, 0.24),
+      transparent 26%
+    ),
+    linear-gradient(180deg, #f3f9ff 0%, #eaf3ff 45%, #f8fcff 100%);
+  --page-bg:
+    radial-gradient(
+      circle at 18% 12%,
+      rgba(111, 187, 255, 0.22),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 82% 4%,
+      rgba(121, 235, 198, 0.22),
+      transparent 24%
+    ),
+    linear-gradient(180deg, #edf6ff 0%, #f8fcff 100%);
+  --card-bg: rgba(255, 255, 255, 0.72);
+  --card-border: rgba(129, 170, 216, 0.3);
+  --surface-bg: rgba(255, 255, 255, 0.7);
+  --surface-border: rgba(129, 170, 216, 0.28);
+  --accent: #1d6fb2;
+  --accent-strong: #2169a8;
+  --panel-badge-bg: rgba(47, 162, 122, 0.15);
+  --panel-badge-text: #176245;
+  --shadow: 0 18px 48px rgba(43, 78, 123, 0.14);
+  --primary-button-text: #f5fbff;
+  --map-bg:
+    radial-gradient(
+      circle at 35% 35%,
+      rgba(126, 188, 255, 0.4),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 60% 60%,
+      rgba(116, 232, 195, 0.3),
+      transparent 24%
+    ),
+    linear-gradient(160deg, #dbeeff 0%, #c8e1f8 100%);
+  --map-core-bg: rgba(242, 249, 255, 0.9);
+
+  color-scheme: light;
 }
 
 * {
@@ -33,14 +129,48 @@ body,
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(89, 179, 255, 0.12),
-      transparent 28%
-    ),
-    radial-gradient(circle at 80% 0%, rgba(64, 224, 178, 0.1), transparent 24%),
-    linear-gradient(180deg, #08111f 0%, #06101c 100%);
+  background: var(--page-bg);
+}
+
+body,
+.hero-copy,
+.hero-panel,
+.card,
+.metric-card,
+.signal-row,
+.mock-row-meta span,
+.tag-pill,
+.status-pill,
+.project-meta span,
+.secondary-button,
+.export-item,
+.map-card,
+.map-core {
+  transition:
+    background-color var(--theme-duration) var(--theme-ease),
+    border-color var(--theme-duration) var(--theme-ease),
+    color var(--theme-duration) var(--theme-ease),
+    box-shadow var(--theme-duration) var(--theme-ease),
+    background var(--theme-duration) var(--theme-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .hero-copy,
+  .hero-panel,
+  .card,
+  .metric-card,
+  .signal-row,
+  .mock-row-meta span,
+  .tag-pill,
+  .status-pill,
+  .project-meta span,
+  .secondary-button,
+  .export-item,
+  .map-card,
+  .map-core {
+    transition: none;
+  }
 }
 
 button {
@@ -63,10 +193,10 @@ button {
 .hero-copy,
 .hero-panel,
 .card {
-  border: 1px solid rgba(159, 188, 230, 0.16);
-  background: rgba(7, 16, 29, 0.72);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
   backdrop-filter: blur(22px);
-  box-shadow: 0 24px 80px rgba(1, 6, 14, 0.35);
+  box-shadow: var(--shadow);
 }
 
 .hero-copy {
@@ -81,7 +211,7 @@ button {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-size: 0.76rem;
-  color: #86c8ff;
+  color: var(--accent);
 }
 
 .hero h1 {
@@ -97,7 +227,7 @@ button {
   margin: 18px 0 0;
   font-size: 1.08rem;
   line-height: 1.7;
-  color: rgba(235, 245, 255, 0.78);
+  color: var(--text-soft);
 }
 
 .project-meta {
@@ -110,9 +240,9 @@ button {
 .project-meta span {
   padding: 9px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(159, 188, 230, 0.16);
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(235, 245, 255, 0.82);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-bg);
+  color: var(--text-chip);
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.74rem;
 }
@@ -138,14 +268,18 @@ button {
 
 .primary-button {
   background: linear-gradient(135deg, #86c8ff 0%, #6fffd5 100%);
-  color: #02111f;
+  color: var(--primary-button-text);
   font-weight: 700;
 }
 
 .secondary-button {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(159, 188, 230, 0.22);
-  color: #f4f7fb;
+  background: var(--surface-bg);
+  border-color: var(--surface-border);
+  color: var(--text-primary);
+}
+
+.theme-toggle {
+  margin-left: auto;
 }
 
 .primary-button:hover,
@@ -163,12 +297,12 @@ button {
 .metric-card {
   border-radius: 20px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(159, 188, 230, 0.14);
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
 }
 
 .metric-card dt {
-  color: rgba(235, 245, 255, 0.7);
+  color: var(--text-soft);
   font-size: 0.88rem;
 }
 
@@ -196,14 +330,14 @@ button {
 
 .panel-header {
   font-size: 0.92rem;
-  color: rgba(235, 245, 255, 0.82);
+  color: var(--text-chip);
 }
 
 .panel-badge {
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(111, 255, 213, 0.12);
-  color: #aafbe3;
+  background: var(--panel-badge-bg);
+  color: var(--panel-badge-text);
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.74rem;
 }
@@ -213,19 +347,8 @@ button {
   overflow: hidden;
   min-height: 320px;
   border-radius: 24px;
-  background:
-    radial-gradient(
-      circle at 35% 35%,
-      rgba(116, 183, 255, 0.28),
-      transparent 22%
-    ),
-    radial-gradient(
-      circle at 60% 60%,
-      rgba(111, 255, 213, 0.18),
-      transparent 20%
-    ),
-    linear-gradient(160deg, #13263d 0%, #0d1724 100%);
-  border: 1px solid rgba(159, 188, 230, 0.12);
+  background: var(--map-bg);
+  border: 1px solid var(--surface-border);
 }
 
 .map-orbit {
@@ -260,15 +383,15 @@ button {
   display: grid;
   place-items: center;
   text-align: center;
-  background: rgba(3, 11, 20, 0.56);
-  border: 1px solid rgba(159, 188, 230, 0.18);
+  background: var(--map-core-bg);
+  border: 1px solid var(--surface-border);
 }
 
 .map-core span {
   display: block;
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.75rem;
-  color: #8ebeff;
+  color: var(--accent-strong);
 }
 
 .map-core strong {
@@ -285,8 +408,8 @@ button {
 .signal-row {
   padding: 14px 16px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(159, 188, 230, 0.12);
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
 }
 
 .signal {
@@ -332,7 +455,7 @@ button {
 .accent-card p:last-child {
   max-width: 48ch;
   margin: 14px 0 0;
-  color: rgba(235, 245, 255, 0.74);
+  color: var(--text-muted);
   line-height: 1.7;
 }
 
@@ -352,7 +475,7 @@ button {
   gap: 16px;
   align-items: start;
   padding: 14px 0;
-  border-top: 1px solid rgba(159, 188, 230, 0.12);
+  border-top: 1px solid var(--surface-border);
 }
 
 .step-row:first-child {
@@ -362,12 +485,12 @@ button {
 
 .step-index {
   font-family: "IBM Plex Mono", monospace;
-  color: #86c8ff;
+  color: var(--accent);
 }
 
 .step-row p {
   margin-top: 6px;
-  color: rgba(235, 245, 255, 0.72);
+  color: var(--text-muted);
   line-height: 1.65;
 }
 
@@ -388,6 +511,41 @@ button {
   grid-column: 1 / -1;
 }
 
+.source-meta,
+.source-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.source-meta {
+  margin-bottom: 12px;
+}
+
+.source-meta span {
+  padding: 8px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-bg);
+  color: var(--text-chip);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+}
+
+.dataset-link {
+  display: inline-flex;
+  align-items: center;
+  margin: 4px 0 14px;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dashed color-mix(in srgb, var(--accent) 60%, transparent);
+  padding-bottom: 2px;
+}
+
+.dataset-link:hover {
+  color: var(--accent-strong);
+}
+
 .mock-list {
   display: grid;
   gap: 12px;
@@ -397,7 +555,7 @@ button {
   display: grid;
   gap: 12px;
   padding: 14px 0;
-  border-top: 1px solid rgba(159, 188, 230, 0.12);
+  border-top: 1px solid var(--surface-border);
 }
 
 .mock-row:first-child {
@@ -414,7 +572,7 @@ button {
 
 .mock-row p,
 .export-item p {
-  color: rgba(235, 245, 255, 0.72);
+  color: var(--text-muted);
   line-height: 1.55;
   margin-top: 4px;
 }
@@ -432,11 +590,11 @@ button {
 .status-pill {
   padding: 7px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(159, 188, 230, 0.14);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-bg);
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.72rem;
-  color: rgba(235, 245, 255, 0.82);
+  color: var(--text-chip);
 }
 
 .status-pill.queued {
@@ -459,8 +617,8 @@ button {
 .export-item {
   padding: 16px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(159, 188, 230, 0.12);
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
 }
 
 @media (max-width: 960px) {
@@ -495,6 +653,10 @@ button {
 
   .metrics-grid {
     grid-template-columns: 1fr;
+  }
+
+  .theme-toggle {
+    margin-left: 0;
   }
 
   .hero h1 {

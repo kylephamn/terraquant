@@ -37,6 +37,15 @@ export interface ExportPreset {
   description: string;
 }
 
+export interface ExternalDatasetSource {
+  label: string;
+  provider: string;
+  url: string;
+  rows: number;
+  queryId: string;
+  keyColumns: string[];
+}
+
 export const mockDashboard = {
   project: {
     name: "TerraQuant / Coastal Watch",
@@ -44,6 +53,24 @@ export const mockDashboard = {
     mode: "Sentinel + drone fusion",
     updatedAt: "Apr 24, 2026 14:20 UTC",
   },
+  dataSource: {
+    label: "USDA NASS Quick Stats",
+    provider: "USDA National Agricultural Statistics Service",
+    url: "https://quickstats.nass.usda.gov/results/40B1D878-9E6C-30A2-88C4-7CDE7AD2FDE6",
+    rows: 37504,
+    queryId: "40B1D878-9E6C-30A2-88C4-7CDE7AD2FDE6",
+    keyColumns: [
+      "Program",
+      "Year",
+      "Geo Level",
+      "State",
+      "County",
+      "Commodity",
+      "Data Item",
+      "Value",
+      "CV (%)",
+    ],
+  } satisfies ExternalDatasetSource,
   metrics: [
     { label: "Scenes processed", value: "128" },
     { label: "Mean confidence", value: "94.2%" },
@@ -74,11 +101,11 @@ export const mockDashboard = {
   ] satisfies PipelineStep[],
   datasets: [
     {
-      name: "Sentinel-2 coastal tile",
-      source: "ESA catalog",
-      resolution: "10 m",
-      coverage: "3,420 km2",
-      freshness: "2 hours ago",
+      name: "USDA Corn Yield by County",
+      source: "NASS Quick Stats",
+      resolution: "County-level",
+      coverage: "National (U.S.)",
+      freshness: "2024 survey snapshot",
     },
     {
       name: "Drone survey batch",
