@@ -1,9 +1,48 @@
 import { useEffect, useState } from "react";
 import { mockDashboard } from "./mockData";
+import { parseUsdaDelimitedFile } from "./usdaImport";
 
 type ThemeMode = "dark" | "light";
 
+interface ImportedDatasetPreview {
+  fileName: string;
+  rowCount: number;
+  headers: string[];
+  sampleRows: Array<Record<string, string>>;
+}
+
 const THEME_STORAGE_KEY = "terraquant-theme";
+
+const FIELD_ALIASES: Record<string, string[]> = {
+  Program: ["program"],
+  Year: ["year", "program year", "reference_period_desc"],
+  "Geo Level": ["geo level", "level_desc"],
+  State: ["state", "state_name", "state_alpha"],
+  County: ["county", "county_name"],
+  Commodity: ["commodity", "commodity_desc"],
+  "Data Item": ["data item", "short_desc", "statisticcat_desc"],
+  Value: ["value", "Value"],
+  "CV (%)": ["cv (%)", "cv", "cv_percent"],
+};
+
+const REQUIRED_MAPPING_COLUMNS = ["Year", "County", "Data Item", "Value"];
+
+function getInitialColumnMapping(headers: string[]): Record<string, string> {
+  const lowerToOriginal = new Map(
+    headers.map((header) => [header.trim().toLowerCase(), header]),
+  );
+
+  const mapping: Record<string, string> = {};
+  for (const targetColumn of mockDashboard.dataSource.keyColumns) {
+    const aliases = FIELD_ALIASES[targetColumn] ?? [targetColumn.toLowerCase()];
+    const match = aliases
+      .map((alias) => lowerToOriginal.get(alias.toLowerCase()))
+      .find(Boolean);
+    mapping[targetColumn] = match ?? "";
+  }
+
+  return mapping;
+}
 
 function getInitialTheme(): ThemeMode {
   if (typeof window === "undefined") {
@@ -22,6 +61,10 @@ function getInitialTheme(): ThemeMode {
 
 function App() {
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
+  const [importedDataset, setImportedDataset] =
+    useState<ImportedDatasetPreview | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [columnMapping, setColumnMapping] = useState<Record<string, string>>({});
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -29,7 +72,57 @@ function App() {
     window.localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
+  useEffect(() => {
+    if (!importedDataset) {
+      setColumnMapping({});
+      return;
+    }
+    setColumnMapping(getInitialColumnMapping(importedDataset.headers));
+  }, [importedDataset]);
+
   const nextTheme = theme === "dark" ? "light" : "dark";
+
+  const displayedRows =
+    importedDataset?.rowCount ?? mockDashboard.dataSource.rows;
+  const displayedColumns =
+    importedDataset?.headers.slice(0, 12) ??
+    mockDashboard.dataSource.keyColumns;
+  const mappedCount = mockDashboard.dataSource.keyColumns.filter(
+    (column) => (columnMapping[column] ?? "") !== "",
+  ).length;
+  const missingRequiredColumns = REQUIRED_MAPPING_COLUMNS.filter(
+    (column) => (columnMapping[column] ?? "") === "",
+  );
+  const isMappingReady = missingRequiredColumns.length === 0;
+
+  async function handleDatasetImport(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): Promise<void> {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    try {
+      const text = await file.text();
+      const parsed = parseUsdaDelimitedFile(text);
+
+      setImportedDataset({
+        fileName: file.name,
+        rowCount: parsed.rows.length,
+        headers: parsed.headers,
+        sampleRows: parsed.rows.slice(0, 5),
+      });
+      setImportError(null);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unknown parse error.";
+      setImportedDataset(null);
+      setImportError(`Could not parse file. ${message}`);
+    }
+
+    event.target.value = "";
+  }
 
   return (
     <main className="app-shell">
@@ -135,7 +228,7 @@ function App() {
           <h2>{mockDashboard.dataSource.label}</h2>
           <div className="source-meta">
             <span>{mockDashboard.dataSource.provider}</span>
-            <span>{mockDashboard.dataSource.rows.toLocaleString()} rows</span>
+            <span>{displayedRows.toLocaleString()} rows</span>
             <span>Query ID {mockDashboard.dataSource.queryId}</span>
           </div>
           <a
@@ -147,12 +240,110 @@ function App() {
             Open USDA Quick Stats result
           </a>
           <div className="source-columns">
-            {mockDashboard.dataSource.keyColumns.map((column) => (
+            {displayedColumns.map((column) => (
               <span key={column} className="tag-pill">
                 {column}
               </span>
             ))}
           </div>
+
+          <div className="import-panel">
+            <label className="upload-label" htmlFor="usda-upload">
+              Import USDA Spreadsheet Export (CSV/TSV)
+            </label>
+            <input
+              id="usda-upload"
+              className="upload-input"
+              type="file"
+              accept=".csv,.tsv,.txt"
+              onChange={handleDatasetImport}
+            />
+            {importError ? (
+              <p className="import-error">{importError}</p>
+            ) : importedDataset ? (
+              <p className="import-note">
+                Loaded {importedDataset.fileName} with{" "}
+                {importedDataset.rowCount.toLocaleString()} rows.
+              </p>
+            ) : (
+              <p className="import-note">
+                No local file loaded yet. Upload an exported Quick Stats file to
+                preview columns.
+              </p>
+            )}
+          </div>
+
+          {importedDataset ? (
+            <div className="import-results">
+              <div className="mapping-panel">
+                <div className="mapping-header">
+                  <h3>Column mapping</h3>
+                  <span>
+                    {mappedCount}/{mockDashboard.dataSource.keyColumns.length} mapped
+                  </span>
+                </div>
+                <p>
+                  Auto-mapped what it could. Review and adjust fields before using
+                  this file downstream.
+                </p>
+                {isMappingReady ? (
+                  <p className="mapping-status ok">
+                    Required fields are mapped. This file is ready for downstream
+                    analysis.
+                  </p>
+                ) : (
+                  <p className="mapping-status warn">
+                    Missing required fields: {missingRequiredColumns.join(", ")}
+                  </p>
+                )}
+                <div className="mapping-grid">
+                  {mockDashboard.dataSource.keyColumns.map((targetColumn) => (
+                    <label key={targetColumn} className="mapping-row">
+                      <span>{targetColumn}</span>
+                      <select
+                        value={columnMapping[targetColumn] ?? ""}
+                        onChange={(event) => {
+                          const selectedHeader = event.target.value;
+                          setColumnMapping((prev) => ({
+                            ...prev,
+                            [targetColumn]: selectedHeader,
+                          }));
+                        }}
+                      >
+                        <option value="">Not mapped</option>
+                        {importedDataset.headers.map((header) => (
+                          <option key={`${targetColumn}-${header}`} value={header}>
+                            {header}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="table-wrap">
+                <table className="preview-table">
+                  <thead>
+                    <tr>
+                      {importedDataset.headers.slice(0, 6).map((header) => (
+                        <th key={header}>{header}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {importedDataset.sampleRows.map((row, rowIndex) => (
+                      <tr key={`sample-${rowIndex}`}>
+                        {importedDataset.headers.slice(0, 6).map((header) => (
+                          <td key={`${rowIndex}-${header}`}>{row[header]}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
         </article>
 
         <article className="card mock-card">
